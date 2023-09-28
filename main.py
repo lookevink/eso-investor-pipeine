@@ -1,3 +1,4 @@
+from pydantic import BaseModel, Field
 from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
 import requests
@@ -9,9 +10,13 @@ from io import StringIO
 app = FastAPI()
 
 
-@app.get("/get_entity_data/")
-async def get_entity_data(entity_names: str):
-    entity_names_list = entity_names.split(',')
+class EntityNames(BaseModel):
+    names: list[str] = Field(..., example=["Yamasa Co Ltd", "Another Co"])
+
+
+@app.post("/az/get_member_data/")
+async def get_entity_data(entities: EntityNames):
+    entity_names_list = entities.names
     csv_output = StringIO()
     fieldnames = ['Title', 'Name', 'Address', 'BusinessName']
     csv_writer = csv.DictWriter(csv_output, fieldnames=fieldnames)
