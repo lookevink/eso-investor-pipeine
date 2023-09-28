@@ -1,4 +1,5 @@
 import logging
+import time
 from pydantic import BaseModel, Field
 from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
@@ -33,9 +34,18 @@ async def get_entity_data(entities: EntityNames):
         payload = f'model%5BSearchCriteria%5D%5BquickSearch%5D%5BBusinessName%5D={entity_name}'
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
 
+        # wait 0.3 seconds
+        time.sleep(0.3)
+
         response = requests.request("POST", url, headers=headers, data=payload)
         logging.warning(f"Response status code: {response.status_code}")
-        response_data = response.json()
+
+        if response.status_code == 200:
+            response_data = response.json()
+        else:
+            logging.warning(
+                f"Entity {entity_name} returned {response.status_code}. Skipping.")
+            continue
 
         data = response_data.get('Data', None)
         if data is None:
