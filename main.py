@@ -6,12 +6,15 @@ from bs4 import BeautifulSoup
 import re
 import csv
 from io import StringIO
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 app = FastAPI()
 
 
 class EntityNames(BaseModel):
-    names: list[str] = Field(..., example=["Yamasa Co Ltd", "Another Co"])
+    names: list[str] = Field(..., example=["Venture REI", "Another Co"])
 
 
 @app.post("/az/get_member_data/")
@@ -29,8 +32,13 @@ async def get_entity_data(entities: EntityNames):
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
 
         response = requests.request("POST", url, headers=headers, data=payload)
-        response = response.json()
-        data = response['Data']
+        response_data = response.json()
+
+        data = response_data.get('Data', None)
+        if data is None:
+            logging.warning(
+                f"No data received for entity {entity_name}. Skipping.")
+            continue
 
         soup = BeautifulSoup(data, 'html.parser')
         links = soup.find_all('a', {'class': 'BlueLink'})
