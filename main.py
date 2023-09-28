@@ -1,3 +1,4 @@
+import logging
 from pydantic import BaseModel, Field
 from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
@@ -6,8 +7,8 @@ from bs4 import BeautifulSoup
 import re
 import csv
 from io import StringIO
-import logging
 
+# Set up logging
 logging.basicConfig(level=logging.INFO)
 
 app = FastAPI()
@@ -19,6 +20,7 @@ class EntityNames(BaseModel):
 
 @app.post("/az/get_member_data/")
 async def get_entity_data(entities: EntityNames):
+    logging.info("Starting the get_entity_data function")
     entity_names_list = entities.names
     csv_output = StringIO()
     fieldnames = ['Title', 'Name', 'Address', 'BusinessName']
@@ -26,12 +28,13 @@ async def get_entity_data(entities: EntityNames):
     csv_writer.writeheader()
 
     for entity_name in entity_names_list:
-        entity_numbers = []
+        logging.info(f"Processing entity: {entity_name}")
         url = "https://ecorp.azcc.gov/EntitySearch/Search"
         payload = f'model%5BSearchCriteria%5D%5BquickSearch%5D%5BBusinessName%5D={entity_name}'
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
 
         response = requests.request("POST", url, headers=headers, data=payload)
+        logging.warning(f"Response status code: {response.status_code}")
         response_data = response.json()
 
         data = response_data.get('Data', None)
@@ -42,7 +45,10 @@ async def get_entity_data(entities: EntityNames):
 
         soup = BeautifulSoup(data, 'html.parser')
         links = soup.find_all('a', {'class': 'BlueLink'})
-        pattern = re.compile(r'entityNumber=(\d+)')
+        logging.info(f"Found {len(links)} links for entity {entity_name}")
+
+        pattern = re.compile(r'entityNumber=([\w\d]+)')
+        entity_numbers = []
 
         for link in links:
             href = link.get('href')
@@ -50,6 +56,8 @@ async def get_entity_data(entities: EntityNames):
             if match:
                 entity_number = match.group(1)
                 entity_numbers.append(entity_number)
+        logging.info(
+            f"Found {len(entity_numbers)} entity numbers for entity {entity_name}")
 
         for entity_number in entity_numbers:
             url = f"https://ecorp.azcc.gov/BusinessSearch/BusinessInfo?entityNumber={entity_number}"
