@@ -194,16 +194,18 @@ async def get_entity_data(entities: EntityNames) -> object:
         entities = response.json().get('rows', '')
         logging.info(f"Found {len(entities)} entity numbers for entity {entity_name}")
 
-        for entity in entities:
-            time.sleep(5)  # Rate limit wait
-            response = requests.get(
-                f'https://bizfileonline.sos.ca.gov/api/FilingDetail/business/{entity}/false',
-                headers=headers,
-            )
-            for obj in response.json()['DRAWER_DETAIL_LIST']:
-                if obj['LABEL'] == "Agent":
-                    business_name = obj['VALUE']
-                    print(f"Processing business {business_name}")
+        # for entity in entities:
+        #     time.sleep(5)  # Rate limit wait
+        #     response = requests.get(
+        #         f'https://bizfileonline.sos.ca.gov/api/FilingDetail/business/{entity}/false',
+        #         headers=headers,
+        #     )
+        #     for obj in response.json()['DRAWER_DETAIL_LIST']:
+        #         if obj['LABEL'] == "Agent":
+        #             business_name = obj['VALUE']
+        #             print(f"Processing business {business_name}")
+
+        return entities
 
 
 @app.get("/")
