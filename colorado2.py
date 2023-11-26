@@ -90,4 +90,5 @@ for page in range(1, int(num_pages)):
     tables[0].columns = ['ID #', 'Name', 'Address']
     entities = pd.concat([entities, tables[0]])
 
+entities.reset_index(inplace=True, drop=True)
 print(entities)
