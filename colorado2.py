@@ -27,7 +27,7 @@ headers = {
 }
 
 session = requests.Session()
-response = session.get("https://www.sos.state.co.us/ucc/pages/biz/bizSearch.xhtml")
+response = session.get("https://www.sos.state.co.us/ucc/pages/biz/bizSearch.xhtml", headers=headers)
 soup = BeautifulSoup(response.text, 'lxml')
 view_state = soup.find('input', {'name': 'javax.faces.ViewState'})['value']
 data = {
@@ -91,4 +91,39 @@ for page in range(1, int(num_pages)):
     entities = pd.concat([entities, tables[0]])
 
 entities.reset_index(inplace=True, drop=True)
-print(entities)
+
+for entity_id in entities["ID #"]:
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; rv:109.0) Gecko/20100101 Firefox/119.0',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Prefer': 'safe',
+        'Referer': 'https://www.sos.state.co.us/biz/BusinessEntityCriteriaExt.do',
+        'DNT': '1',
+        'Connection': 'keep-alive',
+        'Upgrade-Insecure-Requests': '1',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'same-origin',
+        'Sec-Fetch-User': '?1',
+        'Pragma': 'no-cache',
+        'Cache-Control': 'no-cache',
+    }
+    params = {
+        'quitButtonDestination': 'BusinessEntityResults',
+        'nameTyp': 'ENT',
+        'masterFileId': entity_id,
+        'entityId2': entity_id,
+        'fileId': entity_id,
+        'srchTyp': 'ENTITY',
+    }
+    response = session.get(
+        'https://www.sos.state.co.us/biz/BusinessEntityDetail.do',
+        params=params,
+        headers=headers,
+    )
+    try:
+        tables = pd.read_html(StringIO(response.text))
+    except ValueError as err:
+        continue
+    print(tables)

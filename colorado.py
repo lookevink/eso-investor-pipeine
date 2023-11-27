@@ -37,7 +37,7 @@ data = {
 }
 
 session = requests.Session()
-session.get("https://www.sos.state.co.us/biz/BusinessEntityCriteriaExt.do")
+session.get("https://www.sos.state.co.us/biz/BusinessEntityCriteriaExt.do", headers=headers)
 response = session.post(
     'https://www.sos.state.co.us/biz/BusinessEntityCriteriaExt.do',
     headers=headers,
@@ -80,7 +80,6 @@ for col in entities.columns:
     entities.drop(columns=[col], inplace=True)
 entities.dropna(axis=1, how='all', inplace=True)
 entities.rename(columns={"/biz/BusinessEntityResults.do?&cmd=passgo&sc1=1": "Url"}, inplace=True)
-pd.set_option('display.max_columns', None)
 
 for entity_url in entities["Url"]:
     headers = {
