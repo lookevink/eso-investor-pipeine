@@ -101,7 +101,7 @@ headers = {
 for i in range(2, int(num_pages) + 1):
     data = f'undefined&sortby=&stype=a&pidx={i}'
     response = session.post(
-        'https://esos.nv.gov/EntitySearch/OnlineBusinessAndMarkSearchResultPagination',
+        'hvOnlineBusinessAndMarkSearchResultPagination',
         cookies=cookies,
         headers=headers,
         data=data,

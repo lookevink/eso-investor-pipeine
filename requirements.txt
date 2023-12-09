@@ -2,6 +2,7 @@ fastapi~=0.104.1
 uvicorn
 bs4~=0.0.1
 requests~=2.31.0
-pandas
-pydantic~=2.5.0
+pandas==2.1.4
+pydantic==2.5.2
 beautifulsoup4~=4.12.2
+playwright~=1.40.0

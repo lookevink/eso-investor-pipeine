@@ -32,6 +32,7 @@ soup = BeautifulSoup(response.text, 'lxml')
 view_state = soup.find('input', {'name': 'javax.faces.ViewState'})['value']
 data = {
     'bizSearchForm': 'bizSearchForm',
+
     'bizSearchForm:orgNameId': 'Real-Estate Broker',
     'bizSearchForm:orgId': '',
     'bizSearchForm:searchBtn': 'Search',

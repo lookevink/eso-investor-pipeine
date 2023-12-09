@@ -1,8 +1,13 @@
 import logging
 import time
-from pydantic import BaseModel, Field
 from fastapi import FastAPI
+# from fastapi.security import OAuth2PasswordBearer
+# from .dependencies import get_query_token, get_token_header
+from .internal import admin
+from .routers import entities, states, users
+from .models.entity_names import EntityNames
 from fastapi.responses import StreamingResponse
+# from typing import Annotated
 import requests
 from bs4 import BeautifulSoup, Tag
 import re
@@ -10,18 +15,21 @@ import csv
 from io import StringIO
 
 logging.basicConfig(level=logging.INFO)
+# app = FastAPI(dependencies=[Depends(get_query_token)])
 app = FastAPI()
 
+# oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-class EntityNames(BaseModel):
-    """
-    Represents a list of entity names.
-
-    Attributes:
-        names (list[str]): The list of entity names.
-
-    """
-    names: list[str] = Field(..., example=["Venture REI", "Another Co"])
+app.include_router(entities.router)
+app.include_router(states.router)
+app.include_router(users.router)
+app.include_router(
+    admin.router,
+    prefix="/admin",
+    tags=["admin"],
+    # dependencies=[Depends(get_token_header)],
+    # responses={418: {"description": "I'm a teapot"}},
+)
 
 
 def extract_entity_numbers(html: str) -> list[str]:
@@ -63,12 +71,12 @@ def write_csv_data(csv_writer: csv.DictWriter, business_name: str, table: Tag):
 
 
 @app.post("/az/get_member_data/")
-async def get_entity_data(entities: EntityNames) -> object:
+async def get_entity_data(entity_names: EntityNames) -> object:
     """
     Retrieves entity data from the Arizona Corporation Commission website for the given list of entity names.
 
     Args:
-        entities (EntityNames): The list of entity names.
+        entity_names (EntityNames): The list of entity names.
 
     Returns:
         object: A StreamingResponse object containing the entity data in CSV format.
@@ -79,7 +87,7 @@ async def get_entity_data(entities: EntityNames) -> object:
     csv_writer = csv.DictWriter(csv_output, fieldnames=['Title', 'Name', 'Address', 'BusinessName'])
     csv_writer.writeheader()
 
-    for entity_name in entities.names:
+    for entity_name in entity_names.names:
         logging.info(f"Processing entity: {entity_name}")
         time.sleep(5)  # Rate limit wait
         response = requests.post(
@@ -116,12 +124,12 @@ async def get_entity_data(entities: EntityNames) -> object:
 
 
 @app.post("/ca/get_member_data/")
-async def get_entity_data(entities: EntityNames) -> object:
+async def get_entity_data(entity_names: EntityNames) -> object:
     """
     Retrieves entity data from the California Secretary of State website for the given list of entity names.
 
     Args:
-        entities (EntityNames): The list of entity names.
+        entity_names (EntityNames): The list of entity names.
 
     Returns:
         object: A StreamingResponse object containing the entity data.
@@ -132,7 +140,7 @@ async def get_entity_data(entities: EntityNames) -> object:
     csv_writer = csv.DictWriter(csv_output, fieldnames=['Title', 'Name', 'Address', 'BusinessName'])
     csv_writer.writeheader()
 
-    for entity_name in entities.names:
+    for entity_name in entity_names.names:
         logging.info(f"Processing entity: {entity_name}")
         time.sleep(5)  # Rate limit wait
 
@@ -191,10 +199,10 @@ async def get_entity_data(entities: EntityNames) -> object:
             logging.warning(f"Entity {entity_name} returned {response.status_code}. Skipping.")
             continue
 
-        entities = response.json().get('rows', '')
-        logging.info(f"Found {len(entities)} entity numbers for entity {entity_name}")
+        entity_names = response.json().get('rows', '')
+        logging.info(f"Found {len(entity_names)} entity numbers for entity {entity_name}")
 
-        # for entity in entities:
+        # for entity in entity_names:
         #     time.sleep(5)  # Rate limit wait
         #     response = requests.get(
         #         f'https://bizfileonline.sos.ca.gov/api/FilingDetail/business/{entity}/false',
@@ -205,7 +213,7 @@ async def get_entity_data(entities: EntityNames) -> object:
         #             business_name = obj['VALUE']
         #             print(f"Processing business {business_name}")
 
-        return entities
+        return entity_names
 
 
 @app.get("/")
