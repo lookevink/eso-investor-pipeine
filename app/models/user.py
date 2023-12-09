@@ -4,6 +4,6 @@ from pydantic import BaseModel
 
 
 class User(BaseModel):
-    id: Optional[UUID] = uuid4()
+    user_uuid: Optional[UUID] = uuid4()
     first_name: str
     last_name: str

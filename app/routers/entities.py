@@ -1,20 +1,46 @@
-from fastapi import APIRouter, Depends, HTTPException
+from typing import List
+from uuid import uuid4
 
-from ..dependencies import get_token_header
+from fastapi import APIRouter, HTTPException  # Depends,
+
+from app.models.entity import Entity
+
+# from ..dependencies import get_token_header
 
 router = APIRouter(
     prefix="/entities",
     tags=["entities"],
-    dependencies=[Depends(get_token_header)],
-    responses={404: {"description": "Not found"}},
+    # dependencies=[Depends(get_token_header)],
+    # responses={404: {"description": "Not found"}},
 )
 
 
-fake_entities_db = {"123456789": {"name": "Entity 1"}, "987654321": {"name": "Entity 2"}}
+def uuid():
+    pass
+
+
+fake_entities_db: List[Entity] = [
+    Entity(
+        entity_uuid=uuid4(),
+        entity_name="Test Entity",
+    ),
+    Entity(
+        entity_uuid=uuid4(),
+        entity_name="Test Entity 2",
+    ),
+    Entity(
+        entity_uuid=uuid4(),
+        entity_name="Test Entity 3",
+    ),
+    Entity(
+        entity_uuid=uuid4(),
+        entity_name="Test Entity 4",
+    ),
+]
 
 
 @router.get("/", tags=["entities"])
-async def read_entities() -> dict[str, dict[str, str]]:
+async def read_entities() -> dict[str, Entity]:
     return fake_entities_db
 
 

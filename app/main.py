@@ -4,7 +4,7 @@ from fastapi import FastAPI
 # from fastapi.security import OAuth2PasswordBearer
 # from .dependencies import get_query_token, get_token_header
 from .internal import admin
-from .routers import entities, states, users
+from .routers import agents, entities, sources, states, users
 from .models.entity_names import EntityNames
 from fastapi.responses import StreamingResponse
 # from typing import Annotated
@@ -20,9 +20,12 @@ app = FastAPI()
 
 # oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
+app.include_router(agents.router)
 app.include_router(entities.router)
+app.include_router(sources.router)
 app.include_router(states.router)
 app.include_router(users.router)
+
 app.include_router(
     admin.router,
     prefix="/admin",
