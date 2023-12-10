@@ -3,9 +3,9 @@ from uuid import UUID, uuid4
 
 from pydantic import BaseModel
 
-from app.models.agent import Agent
-from app.models.source import Source
-from app.models.state import State
+from app.schemas.agent import Agent
+from app.schemas.source import Source
+from app.schemas.state import State
 
 
 class Entity(BaseModel):

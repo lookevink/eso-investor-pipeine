@@ -3,7 +3,7 @@ from typing import List
 from uuid import uuid4  # , UUID
 
 # from ..dependencies import get_token_header
-from ..models.user import User
+from ..schemas.user import User
 
 router = APIRouter(
     prefix="/users",

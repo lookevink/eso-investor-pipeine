@@ -25,6 +25,7 @@ headers = {
     'Cache-Control': 'no-cache',
 }
 
+
 class MyResourceParser(WebsiteResourceParser):
     # List of arguments to pass into BeautifulSoup().find() method.
     extra_find_iframe_args = [
@@ -42,26 +43,30 @@ except (RecaptchaBlocked, MaxRetriesExceeded) as e:
 
 cookies = {
     "ASP.NET_SessionId": "jg1x5ubs3z2uvyw3zdfbbhcq",
-    "ESSCookieEncypt": "!WHynVN82TLCsAauj+pcpa7ZMcUZSD1r724NeD8LSaBM8e9o/aaybcVdt/VCloL5sXDmipGW1FETvAS6jCfl/KrLjO+W5wTYKAQbEfKiGSIqgpdYnu8mgPZldA8CKN+At60n5Y5eefg1vn+HMkC5S3oJyqMSxWCc=",
+    "ESSCookieEncypt": "!WHynVN82TLCsAauj+pcpa7ZMcUZSD1r724NeD8LSaBM8e9o/aaybcVdt/VCloL5sXDmipGW1FETvAS6jCfl/KrLjO"
+                       "+W5wTYKAQbEfKiGSIqgpdYnu8mgPZldA8CKN+At60n5Y5eefg1vn+HMkC5S3oJyqMSxWCc=",
     "incap_ses_159_2373390": "O2EGW28h3RNTJvSmv+E0Ag35Z2UAAAAAuH3vyQ01+sKPHBFP5Wsu4Q==",
     "incap_ses_269_2373390": "pRjSAEYQUSsrHgNtMa67A9QbYWUAAAAAGrwOrb0zMR1X33witZmt3Q==",
     "nlbi_2373390": "6vFTcz8jeRLLySXBM+c3awAAAABjMNsp4kXcLQJxkm1QD5UN",
     "nlbi_2373390_2147483392": "F9CKc6PTJDHW2eWhM+c3awAAAACXmoEelcgskolLed8e3H73",
-    "reese84": "3:Qpndh/M7bSJqZWDKQ3orBw==:6dPW9uJZLLCoKkA1YgsZE+FLnK0XpdG2bkyREez0rdcXbEL+47ztEWE7mQN7SY1B4FeI4C6usIZdsvOZf7bjCWS9P2giLs8QLxgIqR6DV8uczhIlfT5bB8qfmTky1a4sPPGztHR9Exg92g9eAqT6k1MEhs7m4PdduTU5C+scOEmYhYLsLUSvgoqq9D9IPCU/RWNck9HSWWeK53uIT8tiUP3C6lJKTMtDBT7qvWob6DKXu7sQZQVQcbWpq4Y6wSE6shlmGCJyGyr5SY93gGzQlAJUFbya7Vhez4ygrGV92nyjkscfdxXU9eFHNfrK/8eX0kbknoanQGwZn2U6OdVB0wLSrQxpJi1ilQpixgyK847djVifKsOHgDAKbyXLYcjuwphsKlhegv+NPB09zlik9O9ocXAHhCcaF8fUw8dpSgudq7yDBNFNoQ6ZEeZeonWis3acEji3y6KxIJJpfmkeMAyU+oRBTjCTjO3nGs+e7iIUi5n3a7EKKUOtDDaiVDLp:Wjts0g1m/8WOmZQsOXUqZznmCm4RCmaRnSV4boaT6Ok=",
+    "reese84": "3:Qpndh/M7bSJqZWDKQ3orBw==:6dPW9uJZLLCoKkA1YgsZE+FLnK0XpdG2bkyREez0rdcXbEL"
+               "+47ztEWE7mQN7SY1B4FeI4C6usIZdsvOZf7bjCWS9P2giLs8QLxgIqR6DV8uczhIlfT5bB8qfmTky1a4sPPGztHR9Exg92g9eAqT6k1"
+               "MEhs7m4PdduTU5C+scOEmYhYLsLUSvgoqq9D9IPCU/RWNck9HSWWeK53uIT8tiUP3C6lJKTMtDBT7qvWob6DKXu7sQZQVQcbWpq4Y6w"
+               "SE6shlmGCJyGyr5SY93gGzQlAJUFbya7Vhez4ygrGV92nyjkscfdxXU9eFHNfrK/8eX0kbknoanQGwZn2U6OdVB0wLSrQxpJi1ilQpi"
+               "xgyK847djVifKsOHgDAKbyXLYcjuwphsKlhegv+NPB09zlik9O9ocXAHhCcaF8fUw8dpSgudq7yDBNFNoQ6ZEeZeonWis3acEji3y6K"
+               "xIJJpfmkeMAyU+oRBTjCTjO3nGs+e7iIUi5n3a7EKKUOtDDaiVDLp:Wjts0g1m/8WOmZQsOXUqZznmCm4RCmaRnSV4boaT6Ok=",
     "visid_incap_2373390": "L5fG2I2USai6mFyjtyzBcQn4YGUAAAAAQUIPAAAAAAAN2FiLysaqfD9B6MrCdKto"
 }
 
 
-
-
 session = requests.Session()
 
-response = session.get(
+response3 = session.get(
     'https://www.nvsos.gov/sos/businesses',
     headers=headers
 )
 
-soup = BeautifulSoup(response.text, 'html.parser')
+soup = BeautifulSoup(response3.text, 'html.parser')
 
 script_src = None
 iframe_src = None
@@ -128,7 +133,6 @@ headers = {
     'Origin': 'https://esos.nv.gov',
     'DNT': '1',
     'Connection': 'keep-alive',
-    # 'Cookie': 'visid_incap_2373390=L5fG2I2USai6mFyjtyzBcQn4YGUAAAAAQUIPAAAAAAAN2FiLysaqfD9B6MrCdKto; incap_ses_269_2373390=pRjSAEYQUSsrHgNtMa67A9QbYWUAAAAAGrwOrb0zMR1X33witZmt3Q==; nlbi_2373390_2147483392=yzvCCtCu8mA4M4EwM+c3awAAAACE18g1iX4Y11I/I29pTB8e; ESSCookieEncypt=!WHynVN82TLCsAauj+pcpa7ZMcUZSD1r724NeD8LSaBM8e9o/aaybcVdt/VCloL5sXDmipGW1FETvAS6jCfl/KrLjO+W5wTYKAQbEfKiGSIqgpdYnu8mgPZldA8CKN+At60n5Y5eefg1vn+HMkC5S3oJyqMSxWCc=; nlbi_2373390=6vFTcz8jeRLLySXBM+c3awAAAABjMNsp4kXcLQJxkm1QD5UN; reese84=3:Qpndh/M7bSJqZWDKQ3orBw==:6dPW9uJZLLCoKkA1YgsZE+FLnK0XpdG2bkyREez0rdcXbEL+47ztEWE7mQN7SY1B4FeI4C6usIZdsvOZf7bjCWS9P2giLs8QLxgIqR6DV8uczhIlfT5bB8qfmTky1a4sPPGztHR9Exg92g9eAqT6k1MEhs7m4PdduTU5C+scOEmYhYLsLUSvgoqq9D9IPCU/RWNck9HSWWeK53uIT8tiUP3C6lJKTMtDBT7qvWob6DKXu7sQZQVQcbWpq4Y6wSE6shlmGCJyGyr5SY93gGzQlAJUFbya7Vhez4ygrGV92nyjkscfdxXU9eFHNfrK/8eX0kbknoanQGwZn2U6OdVB0wLSrQxpJi1ilQpixgyK847djVifKsOHgDAKbyXLYcjuwphsKlhegv+NPB09zlik9O9ocXAHhCcaF8fUw8dpSgudq7yDBNFNoQ6ZEeZeonWis3acEji3y6KxIJJpfmkeMAyU+oRBTjCTjO3nGs+e7iIUi5n3a7EKKUOtDDaiVDLp:Wjts0g1m/8WOmZQsOXUqZznmCm4RCmaRnSV4boaT6Ok=; ASP.NET_SessionId=jg1x5ubs3z2uvyw3zdfbbhcq; incap_ses_159_2373390=O2EGW28h3RNTJvSmv+E0Ag35Z2UAAAAAuH3vyQ01+sKPHBFP5Wsu4Q==',
     'Upgrade-Insecure-Requests': '1',
     'Sec-Fetch-Dest': 'document',
     'Sec-Fetch-Mode': 'navigate',

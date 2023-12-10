@@ -3,7 +3,7 @@ from uuid import uuid4
 
 from fastapi import APIRouter, HTTPException  # Depends,
 
-from app.models.entity import Entity
+from app.schemas.entity import Entity
 
 # from ..dependencies import get_token_header
 
@@ -40,15 +40,15 @@ fake_entities_db: List[Entity] = [
 
 
 @router.get("/", tags=["entities"])
-async def read_entities() -> dict[str, Entity]:
+async def read_entities() -> list[Entity]:
     return fake_entities_db
 
 
 @router.get("/{entity_uuid}", tags=["entities"])
-async def read_entity(entity_uuid: str) -> dict[str, str]:
+async def read_entity(entity_uuid: str) -> Entity:
     if entity_uuid not in fake_entities_db:
         raise HTTPException(status_code=404, detail="Item not found")
-    return {"name": fake_entities_db[entity_uuid]["name"], "entity_uuid": entity_uuid}
+    return next((x for x in fake_entities_db if x.entity_uuid == entity_uuid), None)
 
 
 @router.put(

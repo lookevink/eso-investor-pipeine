@@ -5,10 +5,9 @@ from fastapi import APIRouter  # , Depends
 
 
 # from ..dependencies import get_token_header
-from ..models.agent import Agent
-from ..models.entity import Entity
-from ..models.source import Source
-from ..models.state import State
+from ..schemas.agent import Agent
+from ..schemas.source import Source
+from ..schemas.state import State
 
 router = APIRouter(
     prefix="/agents",

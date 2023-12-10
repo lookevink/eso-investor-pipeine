@@ -6,3 +6,4 @@ pandas==2.1.4
 pydantic==2.5.2
 beautifulsoup4~=4.12.2
 playwright~=1.40.0
+incapsula~=0.7.5

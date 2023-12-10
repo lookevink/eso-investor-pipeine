@@ -5,7 +5,7 @@ from fastapi import FastAPI
 # from .dependencies import get_query_token, get_token_header
 from .internal import admin
 from .routers import agents, entities, sources, states, users
-from .models.entity_names import EntityNames
+from .schemas.entity_names import EntityNames
 from fastapi.responses import StreamingResponse
 # from typing import Annotated
 import requests

@@ -1,11 +1,11 @@
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel
 
 # from app.models.entity import Entity  # circular import
-from app.models.source import Source
-from app.models.state import State
+from app.schemas.source import Source
+from app.schemas.state import State
 
 
 class Agent(BaseModel):

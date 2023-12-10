@@ -3,7 +3,7 @@ from uuid import UUID, uuid4
 
 from pydantic import BaseModel
 
-from app.models.state import State
+from app.schemas.state import State
 
 
 class Source(BaseModel):

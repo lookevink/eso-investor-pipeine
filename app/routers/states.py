@@ -3,7 +3,7 @@ from uuid import uuid4
 from fastapi import APIRouter  # , Depends
 
 # from ..dependencies import get_token_header
-from ..models.state import State
+from ..schemas.state import State
 
 router = APIRouter(
     prefix="/states",
